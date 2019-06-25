@@ -40,11 +40,16 @@ LABEL summary="${SUMMARY}" \
       usage="s2i build https://github.com/sclorg/s2i-php-container.git --context-dir=${PHP_VERSION}/test/test-app centos/${NAME}-${PHP_VER_SHORT}-centos7 sample-server" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
+
+# Enable EPEL
+RUN yum install -y epel-release && yum install -y libc-client
+
+
 # Install Apache httpd and PHP
-RUN yum install -y centos-release-scl && \
+RUN yum install -y centos-release-scl && yum install -y sclo-php72-php-imap && \
     INSTALL_PKGS="rh-php72 rh-php72-php rh-php72-php-mysqlnd rh-php72-php-pgsql rh-php72-php-bcmath \
                   rh-php72-php-gd rh-php72-php-intl rh-php72-php-ldap rh-php72-php-mbstring rh-php72-php-pdo \
-                  rh-php72-php-imap rh-php72-php-process rh-php72-php-soap rh-php72-php-opcache rh-php72-php-xml \
+                  rh-php72-php-process rh-php72-php-soap rh-php72-php-opcache rh-php72-php-xml \
                   rh-php72-php-gmp rh-php72-php-pecl-apcu httpd24-mod_ssl" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS --nogpgcheck && \
     rpm -V $INSTALL_PKGS && \
